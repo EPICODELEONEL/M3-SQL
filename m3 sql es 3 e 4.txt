@@ -1,0 +1,913 @@
+Microsoft Windows [Versione 10.0.22000.1455]
+(c) Microsoft Corporation. Tutti i diritti riservati.
+
+C:\Users\39389>mysql --version
+mysql  Ver 8.0.32 for Win64 on x86_64 (MySQL Community Server - GPL)
+
+C:\Users\39389>mysql -u root -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 52
+Server version: 8.0.32 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| gamemaster         |
+| gamestore          |
+| gaming             |
+| information_schema |
+| mysql              |
+| negozio            |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.01 sec)
+
+mysql> use database gamemaster;
+ERROR 1049 (42000): Unknown database 'database'
+mysql> use gamemaste;
+ERROR 1049 (42000): Unknown database 'gamemaste'
+mysql> use gamemaster;
+Database changed
+mysql> show tables;
++----------------------+
+| Tables_in_gamemaster |
++----------------------+
+| store                |
++----------------------+
+1 row in set (0.01 sec)
+
+mysql> explain store;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id_store  | int         | YES  |     | NULL    |       |
+| indirizzo | varchar(20) | YES  |     | NULL    |       |
+| telefono  | varchar(8)  | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> alter table indirizzo modify column varchar(128);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchar(128)' at line 1
+mysql> alter table indirizzo;
+ERROR 1146 (42S02): Table 'gamemaster.indirizzo' doesn't exist
+mysql> describe store;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id_store  | int         | YES  |     | NULL    |       |
+| indirizzo | varchar(20) | YES  |     | NULL    |       |
+| telefono  | varchar(8)  | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table store modify column indirizzo varchar(128);
+Query OK, 1 row affected (0.08 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> alter table store modify column telefono varchar(64);
+Query OK, 1 row affected (0.03 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> insert into store (id_store,indirizzo,telefono),(11,'vialem appia 96 Roma',998),
+    -> (12,'Via Della Primavera, 194 - Roma. ...',331),
+    -> (13,' Via Schiavonetti 05 Roma',223),
+    -> (14,'Via Dei Sampieri, 92 - Roma. ...',445),
+    -> (15,'Via Riano, Snc - Roma. ...',665),
+    -> (16,'Via Niccodemi, 105 - Roma. ...',776),
+    -> (17,'Via Andrea Barbato - Roma',345)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',(11,'vialem appia 96 Roma',998),
+(12,'Via Della Primavera, 194 - Roma. ...',331' at line 1
+mysql> insert into store (id_store,indirizzo,telefono),(11,'vialem appia 96 Roma',998),
+    -> (12,'Via Della Primavera 194  Roma',331),
+    -> (13,' Via Schiavonetti 05 Roma',223),
+    -> (14,'Via Dei Sampieri 92  Roma',445),
+    -> (15,'Via Riano Snc  Roma',665),
+    -> (16,'Via Niccodemi 105  Roma',776),
+    -> (17,'Via Andrea Barbato  Roma',345)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',(11,'vialem appia 96 Roma',998),
+(12,'Via Della Primavera 194  Roma',331),
+(13,' at line 1
+mysql> insert into store (id_store,indirizzo,telefono),(11,'vialem appia 96 Roma',998);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',(11,'vialem appia 96 Roma',998)' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| gamemaster         |
+| gamestore          |
+| gaming             |
+| information_schema |
+| mysql              |
+| negozio            |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> use gamestore;
+Database changed
+mysql> show tables;
++---------------------+
+| Tables_in_gamestore |
++---------------------+
+| attivita_store      |
+| personale           |
+| settore_store       |
+| store               |
+| videogiochi         |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> describe attivita_store;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| id_mansione          | varchar(16) | NO   | PRI | NULL    |       |
+| descrizione_attivita | varchar(16) | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> alter table attivita_store modify column id_mansione int primary key not null;
+ERROR 1068 (42000): Multiple primary key defined
+mysql> describe store;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id_store  | varchar(16) | NO   | PRI | NULL    |       |
+| nome      | varchar(64) | NO   |     | NULL    |       |
+| indirizzo | varchar(64) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into store (id_store,indirizzo,telefono), values (10,'viale marconi 83 Roma',889)
+    -> (11,'vialem appia 96 Roma',998),
+    -> (12,'Via Della Primavera 194  Roma',331),
+    -> (13,' Via Schiavonetti 05 Roma',223),
+    -> (14,'Via Dei Sampieri 92  Roma',445),
+    -> (15,'Via Riano Snc  Roma',665),
+    -> (16,'Via Niccodemi 105  Roma',776),
+    -> (17,'Via Andrea Barbato  Roma',345)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', values (10,'viale marconi 83 Roma',889)
+(11,'vialem appia 96 Roma',998),
+(12,'' at line 1
+mysql> (10,'viale marconi 83 Roma',889)
+    -> (11,'vialem appia 96 Roma',998),
+    -> (12,'Via Della Primavera 194  Roma',331),
+    -> (13,' Via Schiavonetti 05 Roma',223),
+    -> (14,'Via Dei Sampieri 92  Roma',445),
+    -> (15,'Via Riano Snc  Roma',665),
+    -> (16,'Via Niccodemi 105  Roma',776),
+    -> (17,'Via Andrea Barbato  Roma',345)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '10,'viale marconi 83 Roma',889)
+(11,'vialem appia 96 Roma',998),
+(12,'Via Della ' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (10,'viale marconi 83 Roma',889);
+ERROR 1054 (42S22): Unknown column 'telefono' in 'field list'
+mysql> alter table store add telefono int(3) not null;
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> show store;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'store' at line 1
+mysql> show tables;
++---------------------+
+| Tables_in_gamestore |
++---------------------+
+| attivita_store      |
+| personale           |
+| settore_store       |
+| store               |
+| videogiochi         |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> describe store;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id_store  | varchar(16) | NO   | PRI | NULL    |       |
+| nome      | varchar(64) | NO   |     | NULL    |       |
+| indirizzo | varchar(64) | YES  |     | NULL    |       |
+| telefono  | int         | NO   |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into store (id_store,indirizzo,telefono) values (10,'viale marconi 83 Roma',889);
+ERROR 1364 (HY000): Field 'nome' doesn't have a default value
+mysql> alter table store drop nome;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++---------------------+
+| Tables_in_gamestore |
++---------------------+
+| attivita_store      |
+| personale           |
+| settore_store       |
+| store               |
+| videogiochi         |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> describe store;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id_store  | varchar(16) | NO   | PRI | NULL    |       |
+| indirizzo | varchar(64) | YES  |     | NULL    |       |
+| telefono  | int         | NO   |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql>  insert into store (id_store,indirizzo,telefono) values (10,'viale marconi 83 Roma',889);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),
+    ->     -> (12,'Via Della Primavera 194  Roma',331),
+    ->     -> (13,' Via Schiavonetti 05 Roma',223),
+    ->     -> (14,'Via Dei Sampieri 92  Roma',445),
+    ->     -> (15,'Via Riano Snc  Roma',665),
+    ->     -> (16,'Via Niccodemi 105  Roma',776),
+    ->     -> (17,'Via Andrea Barbato  Roma',345);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> (12,'Via Della Primavera 194  Roma',331),
+    -> (13,' Via Schiavonetti 05 Ro' at line 2
+mysql> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),(12,'Via Della Primavera 194  Roma',331),(13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+    '> ;
+    '>
+    '>
+    '>
+    '>
+    '>
+    '> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),(12,'Via Della Primavera 194  Roma',331),(13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano S' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),(12,'Via Della Primavera 194  Roma',331),(13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+    '> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),(12,'Via Della Primavera 194  Roma',331),(13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano S' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),(12,'Via Della Primavera 194  Roma',331),(13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+    '> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),(12,'Via Della Primavera 194  Roma',331),(13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano S' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (11,'vialem appia 96 Roma',998),(12,'Via Della Primavera 194  Roma',331);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> insert into store (id_store,indirizzo,telefono) values (13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+    '> (13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665),(16,'Via Niccodemi 105  Roma',776),(17,'Via Andrea Barbato  Roma',345);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano S' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665);
+    '> insert into store (id_store,indirizzo,telefono) values (13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano Snc  Roma',665);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445),(15,'Via Riano S' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445);
+    '> insert into store (id_store,indirizzo,telefono) values (13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445);
+insert into sto' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (13,Via Schiavonetti 05 Roma',223);
+    '>
+    '>
+    '>
+    '> insert into store (id_store,indirizzo,telefono) values (13,Via Schiavonetti 05 Roma',223),(14,'Via Dei Sampieri 92  Roma',445);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Schiavonetti 05 Roma',223);
+
+
+
+insert into store (id_store,indirizzo,telefono) v' at line 1
+mysql> insert into store (id_store,indirizzo,telefono) values (13,' Via Schiavonetti 05 Roma',223),
+    -> (14,'Via Dei Sampieri 92  Roma',445),
+    -> (15,'Via Riano Snc  Roma',665),
+    -> (16,'Via Niccodemi 105  Roma',776),
+    -> (17,'Via Andrea Barbato  Roma',345)
+    -> ;
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> show values;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'values' at line 1
+mysql> show tables;
++---------------------+
+| Tables_in_gamestore |
++---------------------+
+| attivita_store      |
+| personale           |
+| settore_store       |
+| store               |
+| videogiochi         |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> describe personale;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| codice_fiscale | varchar(16) | NO   | PRI | NULL    |       |
+| nome           | varchar(64) | NO   |     | NULL    |       |
+| titolo_studio  | varchar(64) | YES  |     | NULL    |       |
+| id_store       | varchar(64) | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> insert into personale (codice_fiscale,nome,titolo_studio,id_store) values ('mnlrr67oxb','marco','laurea ',10,2011-2022),
+    -> ('mnlrr67oxc','tom','diploma ',11,2011-2023),
+    -> ('mnlrr67oxe','lexy','diploma ',13,2011-2025)
+    -> ;
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql>  insert into personale (codice_fiscale,nome,titolo_studio,id_store) values ('mnlrr67oxb','marco','laurea ',10,2011-2022);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> alter table personale add lavoro_storico int not null;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe personale
+    -> ;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| codice_fiscale | varchar(16) | NO   | PRI | NULL    |       |
+| nome           | varchar(64) | NO   |     | NULL    |       |
+| titolo_studio  | varchar(64) | YES  |     | NULL    |       |
+| id_store       | varchar(64) | YES  |     | NULL    |       |
+| lavoro_storico | int         | NO   |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into personale (codice_fiscale,nome,titolo_studio,id_store,lavoro_storico) values ('mnlrr67oxb','marco','laurea ',10,2011-2022);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into personale (codice_fiscale,nome,titolo_studio,id_store,lavoro_storico) values ('mnlrr67oxc','tom','diploma ',11,2011-2023),
+    -> ('mnlrr67oxd','richard','laurea ',12,2011-2024),
+    -> ('mnlrr67oxe','lexy','diploma ',13,2011-2025)'
+    '> ('mnlrr67oxf','anna','laurea ',14,2011-2026),
+    '> ('mnlrr67oxg','shane','diploma ',15,2011-2027),
+    '> ('mnlrr67oxh','reina','laurea ',16,2011-2028),
+    '> ('mnlrr67oxi','max','diploma ',17,2011-2029);
+    '>
+    '> ;
+    '> insert into personale (codice_fiscale,nome,titolo_studio,id_store,lavoro_storico) values ('mnlrr67oxc','tom','diploma ',11,2011-2023);
+    '> insert into personale (codice_fiscale,nome,titolo_studio,id_store,lavoro_storico) values ('mnlrr67oxc','tom','diploma ',11,2011-2023),;;;
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>  insert into personale (codice_fiscale,nome,titolo_studio,id_store,lavoro_storico) values ('mnlrr67oxc','tom','diploma ',11,2011-2023),
+    '>     -> ('mnlrr67oxd','richard','laurea ',12,2011-2024),
+    '>     -> ('mnlrr67oxe','lexy','diploma ',13,2011-2025)'
+    ->     '> ('mnlrr67oxf','anna','laurea ',14,2011-2026),
+    '>     '> ('mnlrr67oxg','shane','diploma ',15,2011-2027),
+    ->     '> ('mnlrr67oxh','reina','laurea ',16,2011-2028),
+    '>     '> ('mnlrr67oxi','max','diploma ',17,2011-2029);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''
+('mnlrr67oxf','anna','laurea ',14,2011-2026),
+('mnlrr67oxg','shane','diploma '' at line 3
+mysql>
+mysql> insert into personale (codice_fiscale,nome,titolo_studio,id_store,lavoro_storico) values ('mnlrr67oxc','tom','diploma ',11,2011-2023),('mnlrr67oxd','richard','laurea ',12,2011-2024),('mnlrr67oxe','lexy','diploma ',13,2011-2025),('mnlrr67oxf','anna','laurea ',14,2011-2026),('mnlrr67oxg','shane','diploma ',15,2011-2027),('mnlrr67oxh','reina','laurea ',16,2011-2028),('mnlrr67oxi','max','diploma ',17,2011-2029);
+Query OK, 7 rows affected (0.00 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++---------------------+
+| Tables_in_gamestore |
++---------------------+
+| attivita_store      |
+| personale           |
+| settore_store       |
+| store               |
+| videogiochi         |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> describe attivita_store;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| id_mansione          | varchar(16) | NO   | PRI | NULL    |       |
+| descrizione_attivita | varchar(16) | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into attivita_store(id_mansione,descrizione_attivita) values (1,'cassiere'),
+    -> (2,'magaziniere'),
+    -> (3,'vendita');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> describe settore_store;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| id_settore | varchar(16) | NO   | PRI | NULL    |       |
+| attivita   | varchar(16) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> (18,'cassiere'),
+    -> (19,'magaziniere'),
+    -> (20,'vendita'),
+    -> (21,'cassiere'),
+    -> (22,'magaziniere'),
+    -> (23,'vendita'),
+    -> (24,'cassiere');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '18,'cassiere'),
+(19,'magaziniere'),
+(20,'vendita'),
+(21,'cassiere'),
+(22,'magazi' at line 1
+mysql> insert into settore_store (id_store,attivita) values (18,'cassiere'),
+    -> (19,'magaziniere'),
+    -> (20,'vendita'),
+    -> (21,'cassiere'),
+    -> (22,'magaziniere'),
+    -> (23,'vendita'),
+    -> (24,'cassiere');
+ERROR 1054 (42S22): Unknown column 'id_store' in 'field list'
+mysql> insert into settore_store (id_settore,attivita) values (18,'cassiere'),
+    -> (19,'magaziniere'),
+    -> (20,'vendita'),
+    -> (21,'cassiere'),
+    -> (22,'magaziniere'),
+    -> (23,'vendita'),
+    -> (24,'cassiere');
+Query OK, 7 rows affected (0.00 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> describe videogiochi;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| id_videogiochi | varchar(16) | NO   | PRI | NULL    |       |
+| titolo         | varchar(16) | YES  |     | NULL    |       |
+| remake         | varchar(16) | YES  |     | NULL    |       |
+| genere         | varchar(16) | YES  |     | NULL    |       |
+| numero_copie   | int         | YES  |     | NULL    |       |
+| prezzo         | tinyint     | NO   |     | 18      |       |
++----------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59),
+    '> (8868,'Dead Space Remake.,'Dead Space Remake.','adventure',400,49),
+    -> (8869,'The Last of Us Part I.,'The Last of Us Part 2 remastered','fantasy',600,39),
+    '> (8870,'Pokémon Diamante Lucente e Perla Splendente.,'Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25),
+    -> (8871,'Final Fantasy VII Remake.,'Final Fantasy VII Remake 2','action',1000,10),
+    '> (8872,'Resident Evil 2 Remake.,'Resident Evil 2 Remake3','drama',1200,23),
+    -> (8873,'The Legend of Zelda: Link's Awakening.,'The Legend of Zelda: Link's Awakening remastered','slice of life',1400,69),
+    '> (8874,'Crisis Core Final Fantasy VII Reunion.,'Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's Souls.,'Demon's Souls remake','action',200,59),
+(8868,'Dead Space Remake.,'Dea' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59);
+    '> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's Souls.,'Demon's Souls remake','action',200,59);
+insert into videogiochi(id_vid' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59);
+    '> ;
+    '> ;
+    '> ,
+    '> ,
+    '>
+    '> ,
+    '> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's Souls.,'Demon's Souls remake','action',200,59);
+;
+;
+,
+,
+
+,
+insert into videogi' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values(8867,'Demon's Souls.,'Demon's Souls remake','action',200,59),
+    '> ;
+    '> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's Souls.,'Demon's Souls remake','action',200,59),
+;
+insert into videogiochi(id_v' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59);
+    '> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'Demon's Souls.,'Demon's Souls remake','action',200,59);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's Souls.,'Demon's Souls remake','action',200,59);
+insert into videogiochi(id_vid' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'demons souls','demon soul remake','action',200,59);
+ERROR 1406 (22001): Data too long for column 'remake' at row 1
+mysql> alter table videogiochi modify column remake varchar (128) not null;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8867,'demons souls','demon soul remake','action',200,59);
+Query OK, 1 row affected (0.00 sec)
+
+mysql>  insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake.,'DSpace Remake','adventure',400,49),
+    '> (8869,'The Last of Us Part I.,'The Last of Us Part 2 remastered','fantasy',600,39),
+    -> (8870,'Pokémon Diamante Lucente e Perla Splendente.,'Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25),
+    '> (8871,'Final Fantasy VII Remake.,'Final Fantasy VII Remake 2','action',1000,10),
+    -> (8872,'Resident Evil 2 Remake.,'Resident Evil 2 Remake3','drama',1200,23),
+    '> (8873,'The Legend of Zelda: Link's Awakening.,'The Legend of Zelda: Link's Awakening remastered','slice of life',1400,69),
+    -> (8874,'Crisis Core Final Fantasy VII Reunion.,'Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+    '> ;
+    '> (8868,'Dead Space Remake.,'DSpace Remake','adventure',400,49),
+    -> (8869,'The Last of Us Part I.,'The Last of Us Part 2 remastered','fantasy',600,39),
+    '> (8870,'Pokémon Diamante Lucente e Perla Splendente.,'Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25),
+    -> (8871,'Final Fantasy VII Remake.,'Final Fantasy VII Remake 2','action',1000,10),
+    '> (8872,'Resident Evil 2 Remake.,'Resident Evil 2 Remake3','drama',1200,23),
+    -> (8873,'The Legend of Zelda: Link's Awakening.,'The Legend of Zelda: Link's Awakening remastered','slice of life',1400,69),
+    '> (8874,'Crisis Core Final Fantasy VII Reunion.,'Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DSpace Remake','adventure',400,49),
+(8869,'The Last of Us Part I.,'The Last of U' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake.,'DSpace Remake','adventure',400,49);
+    '> ;
+    '>
+    '> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake.,'DSpace Remake','adventure',400,49);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DSpace Remake','adventure',400,49);
+;
+
+insert into videogiochi(id_videogiochi,ti' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values(8868,'Dead Space Remake.,'DSpace Remake','adventure',400,49),
+    '> (8869,'The Last of Us Part I.,'The Last of Us Part 2 remastered','fantasy',600,39),
+    -> (8870,'Pokémon Diamante Lucente e Perla Splendente.,'Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25),
+    '> (8871,'Final Fantasy VII Remake.,'Final Fantasy VII Remake 2','action',1000,10),
+    -> (8872,'Resident Evil 2 Remake.,'Resident Evil 2 Remake3','drama',1200,23),
+    '> (8873,'The Legend of Zelda: Link's Awakening.,'The Legend of Zelda: Link's Awakening remastered','slice of life',1400,69),
+    -> (8874,'Crisis Core Final Fantasy VII Reunion.,'Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+    '>
+    '> ;
+    '> (8869,'The Last of Us Part I.,'The Last of Us Part 2 remastered','fantasy',600,39),
+    -> (8870,'Pokémon Diamante Lucente e Perla Splendente.,'Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25),
+    '> (8871,'Final Fantasy VII Remake.,'Final Fantasy VII Remake 2','action',1000,10),
+    -> (8872,'Resident Evil 2 Remake.,'Resident Evil 2 Remake3','drama',1200,23),
+    '> (8873,'The Legend of Zelda: Link's Awakening.,'The Legend of Zelda: Link's Awakening remastered','slice of life',1400,69),
+    -> (8874,'Crisis Core Final Fantasy VII Reunion.,'Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+    '>
+    '> mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake.,'DSpace Remake','adventure',400,49);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DSpace Remake','adventure',400,49),
+(8869,'The Last of Us Part I.,'The Last of U' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake','DSpace Remake','adventure',400,49),
+    -> (8869,'The Last of Us Part I','The Last of Us Part 2 remastered','fantasy',600,39),
+    -> (8870,'Pokémon Diamante Lucente e Perla Splendente','Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25),
+    -> (8871,'Final Fantasy VII Remake','Final Fantasy VII Remake 2','action',1000,10),
+    -> (8872,'Resident Evil 2 Remake','Resident Evil 2 Remake3','drama',1200,23),
+    -> (8873,'The Legend of Zelda Link's Awakening','The Legend of Zelda Link's Awakening remastered','slice of life',1400,69),
+    -> (8874,'Crisis Core Final Fantasy VII Reunion','Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's Awakening','The Legend of Zelda Link's Awakening remastered','slice of life',1' at line 6
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake','DSpace Remake','adventure',400,49);
+ERROR 1406 (22001): Data too long for column 'titolo' at row 1
+mysql> alter table videogiochi modify column titolo varchar(128) not null;
+Query OK, 1 row affected (0.02 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql>  insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake','DSpace Remake','adventure',400,49),
+    ->     -> (8869,'The Last of Us Part I','The Last of Us Part 2 remastered','fantasy',600,39),
+    ->     -> (8870,'Pokémon Diamante Lucente e Perla Splendente','Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25),
+    ->     -> (8871,'Final Fantasy VII Remake','Final Fantasy VII Remake 2','action',1000,10),
+    ->     -> (8872,'Resident Evil 2 Remake','Resident Evil 2 Remake3','drama',1200,23),
+    ->     -> (8873,'The Legend of Zelda Link's Awakening','The Legend of Zelda Link's Awakening remastered','slice of life',1400,69),
+    ->     -> (8874,'Crisis Core Final Fantasy VII Reunion','Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> (8869,'The Last of Us Part I','The Last of Us Part 2 remastered','fantasy',60' at line 2
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8868,'Dead Space Remake','DSpace Remake','adventure',400,49);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8869,'The Last of Us Part I','The Last of Us Part 2 remastered','fantasy',600,39);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values 8870,'Pokémon Diamante Lucente e Perla Splendente','Pokémon Diamante Lucente e Perla Splendente. Remastered','calcio',800,25);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '8870,'Pokémon Diamante Lucente e Perla Splendente','Pokémon Diamante Lucente e' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values(8870,'Pokemon Diamante Lucente e Perla Splendente','Pokemon Diamante Lucente e Perla Splendente Remastered','calcio',800,25),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql>  insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8870,'Pokemon Diamante Lucente e Perla Splendente','Pokemon Diamante Lucente e Perla Splendente Remastered','fantasy',800,25);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8871,'Final Fantasy VII Remake','Final Fantasy VII Remake 2','action',1000,10),
+    -> (8872,'Resident Evil 2 Remake','Resident Evil 2 Remake3','drama',1200,23),
+    -> (8873,'The Legend of Zelda Link's Awakening','The Legend of Zelda Link's Awakening remastered','slice of life',1400,69),
+    -> (8874,'Crisis Core Final Fantasy VII Reunion','Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's Awakening','The Legend of Zelda Link's Awakening remastered','slice of life',1' at line 3
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8871,'Final Fantasy VII Remake','Final Fantasy VII Remake 2','action',1000,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8872,'Resident Evil 2 Remake','Resident Evil 2 Remake3','drama',1200,23);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> nsert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8873,'The Legend of Zelda Link's Awakening','The Legend of Zelda Link's Awakening remastered','slice of life',1400,69);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'nsert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) ' at line 1
+mysql> (8873,'The Legend of Zelda Links Awakening','The Legend of Zelda Links Awakening remastered','slice of life',1400,69),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '8873,'The Legend of Zelda Links Awakening','The Legend of Zelda Links Awakening ' at line 1
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8873,'The Legend of Zelda Links Awakening','The Legend of Zelda Links Awakening remastered','slice of life',1400,69);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into videogiochi(id_videogiochi,titolo,remake,genere,numero_copie,prezzo) values (8874,'Crisis Core Final Fantasy VII Reunion','Crisis Core Final Fantasy VII Reunion part 2','autobiografy',800,15);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show columns;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> selcect remake from videogiochi;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selcect remake from videogiochi' at line 1
+mysql> select distinct prezzo from videogiochi;
++--------+
+| prezzo |
++--------+
+|     59 |
+|     49 |
+|     39 |
+|     25 |
+|     10 |
+|     23 |
+|     69 |
+|     15 |
++--------+
+8 rows in set (0.00 sec)
+
+mysql> select id_videogiochi,titolo,remake,genere,numero_copie,prezzo from videogiochi;
++----------------+---------------------------------------------+--------------------------------------------------------+---------------+--------------+--------+
+| id_videogiochi | titolo                                      | remake                                                 | genere        | numero_copie | prezzo |
++----------------+---------------------------------------------+--------------------------------------------------------+---------------+--------------+--------+
+| 8867           | demons souls                                | demon soul remake                                      | action        |          200 |     59 |
+| 8868           | Dead Space Remake                           | DSpace Remake                                          | adventure     |          400 |     49 |
+| 8869           | The Last of Us Part I                       | The Last of Us Part 2 remastered                       | fantasy       |          600 |     39 |
+| 8870           | Pokemon Diamante Lucente e Perla Splendente | Pokemon Diamante Lucente e Perla Splendente Remastered | fantasy       |          800 |     25 |
+| 8871           | Final Fantasy VII Remake                    | Final Fantasy VII Remake 2                             | action        |         1000 |     10 |
+| 8872           | Resident Evil 2 Remake                      | Resident Evil 2 Remake3                                | drama         |         1200 |     23 |
+| 8873           | The Legend of Zelda Links Awakening         | The Legend of Zelda Links Awakening remastered         | slice of life |         1400 |     69 |
+| 8874           | Crisis Core Final Fantasy VII Reunion       | Crisis Core Final Fantasy VII Reunion part 2           | autobiografy  |          800 |     15 |
++----------------+---------------------------------------------+--------------------------------------------------------+---------------+--------------+--------+
+8 rows in set (0.00 sec)
+
+mysql> selectcodice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selectcodice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale' at line 1
+mysql> select codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale;
++----------------+---------+---------------+----------+----------------+
+| codice_fiscale | nome    | titolo_studio | id_store | lavoro_storico |
++----------------+---------+---------------+----------+----------------+
+| mnlrr67oxb     | marco   | laurea        | 10       |            -11 |
+| mnlrr67oxc     | tom     | diploma       | 11       |            -12 |
+| mnlrr67oxd     | richard | laurea        | 12       |            -13 |
+| mnlrr67oxe     | lexy    | diploma       | 13       |            -14 |
+| mnlrr67oxf     | anna    | laurea        | 14       |            -15 |
+| mnlrr67oxg     | shane   | diploma       | 15       |            -16 |
+| mnlrr67oxh     | reina   | laurea        | 16       |            -17 |
+| mnlrr67oxi     | max     | diploma       | 17       |            -18 |
++----------------+---------+---------------+----------+----------------+
+8 rows in set (0.00 sec)
+
+mysql> show tables;
++---------------------+
+| Tables_in_gamestore |
++---------------------+
+| attivita_store      |
+| personale           |
+| settore_store       |
+| store               |
+| videogiochi         |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> describe attivita store;
+ERROR 1146 (42S02): Table 'gamestore.attivita' doesn't exist
+mysql> describe attivita_store;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| id_mansione          | varchar(16) | NO   | PRI | NULL    |       |
+| descrizione_attivita | varchar(16) | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select id_mansione,descrizione_attivita from attivita_store;
++-------------+----------------------+
+| id_mansione | descrizione_attivita |
++-------------+----------------------+
+| 1           | cassiere             |
+| 2           | magaziniere          |
+| 3           | vendita              |
++-------------+----------------------+
+3 rows in set (0.00 sec)
+
+mysql> describe store;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| id_store  | varchar(16) | NO   | PRI | NULL    |       |
+| indirizzo | varchar(64) | YES  |     | NULL    |       |
+| telefono  | int         | NO   |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select store.id_store,indirizzo,telefono from store right join personale using (id_store) order by id_store;
++----------+-------------------------------+----------+
+| id_store | indirizzo                     | telefono |
++----------+-------------------------------+----------+
+| 10       | viale marconi 83 Roma         |      889 |
+| 11       | vialem appia 96 Roma          |      998 |
+| 12       | Via Della Primavera 194  Roma |      331 |
+| 13       |  Via Schiavonetti 05 Roma     |      223 |
+| 14       | Via Dei Sampieri 92  Roma     |      445 |
+| 15       | Via Riano Snc  Roma           |      665 |
+| 16       | Via Niccodemi 105  Roma       |      776 |
+| 17       | Via Andrea Barbato  Roma      |      345 |
++----------+-------------------------------+----------+
+8 rows in set (0.00 sec)
+
+mysql> describe personale;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| codice_fiscale | varchar(16) | NO   | PRI | NULL    |       |
+| nome           | varchar(64) | NO   |     | NULL    |       |
+| titolo_studio  | varchar(64) | YES  |     | NULL    |       |
+| id_store       | varchar(64) | YES  |     | NULL    |       |
+| lavoro_storico | int         | NO   |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale innerjoin store using (id_store);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'store using (id_store)' at line 1
+mysql>  select codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale innerjoin store using (id_store);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'store using (id_store)' at line 1
+mysql> select codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale innerjoin store using id_store;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'store using id_store' at line 1
+mysql> select codice_fiscale,nome,titolo_sstudio,lavoro storico from personale innerjoin store using (id_store);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'store using (id_store)' at line 1
+mysql> select codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale innerjoin store using (id_store) where from personale;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'store using (id_store) where from personale' at line 1
+mysql> select store.id_store,indirizzo,telefono from store right join personale using (id_store) order by personale;
+ERROR 1054 (42S22): Unknown column 'personale' in 'order clause'
+mysql> select personale.codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale left join store using (id_store) using by id_store;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'using by id_store' at line 1
+mysql>  select personale.codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale right join using (id_store) order by id_store;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'using (id_store) order by id_store' at line 1
+mysql> select store.id_store,indirizzo,telefono from store left join personale using (id_store) order by id_store;
++----------+-------------------------------+----------+
+| id_store | indirizzo                     | telefono |
++----------+-------------------------------+----------+
+| 10       | viale marconi 83 Roma         |      889 |
+| 11       | vialem appia 96 Roma          |      998 |
+| 12       | Via Della Primavera 194  Roma |      331 |
+| 13       |  Via Schiavonetti 05 Roma     |      223 |
+| 14       | Via Dei Sampieri 92  Roma     |      445 |
+| 15       | Via Riano Snc  Roma           |      665 |
+| 16       | Via Niccodemi 105  Roma       |      776 |
+| 17       | Via Andrea Barbato  Roma      |      345 |
++----------+-------------------------------+----------+
+8 rows in set (0.00 sec)
+
+mysql>  select personale.codice_fiscale,nome,titolo_studio,id_store,lavoro_storico from personale left join store using (id_store) order by id_store;
++----------------+---------+---------------+----------+----------------+
+| codice_fiscale | nome    | titolo_studio | id_store | lavoro_storico |
++----------------+---------+---------------+----------+----------------+
+| mnlrr67oxb     | marco   | laurea        | 10       |            -11 |
+| mnlrr67oxc     | tom     | diploma       | 11       |            -12 |
+| mnlrr67oxd     | richard | laurea        | 12       |            -13 |
+| mnlrr67oxe     | lexy    | diploma       | 13       |            -14 |
+| mnlrr67oxf     | anna    | laurea        | 14       |            -15 |
+| mnlrr67oxg     | shane   | diploma       | 15       |            -16 |
+| mnlrr67oxh     | reina   | laurea        | 16       |            -17 |
+| mnlrr67oxi     | max     | diploma       | 17       |            -18 |
++----------------+---------+---------------+----------+----------------+
+8 rows in set (0.00 sec)
+
+mysql> describe attivita_personale;
+ERROR 1146 (42S02): Table 'gamestore.attivita_personale' doesn't exist
+mysql> show tables;
++---------------------+
+| Tables_in_gamestore |
++---------------------+
+| attivita_store      |
+| personale           |
+| settore_store       |
+| store               |
+| videogiochi         |
++---------------------+
+5 rows in set (0.00 sec)
+
+mysql> describe attivita_store;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| id_mansione          | varchar(16) | NO   | PRI | NULL    |       |
+| descrizione_attivita | varchar(16) | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select*from attivita_store natural join attivita;
+ERROR 1146 (42S02): Table 'gamestore.attivita' doesn't exist
+mysql> describe settore_store;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| id_settore | varchar(16) | NO   | PRI | NULL    |       |
+| attivita   | varchar(16) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select*from attivita_store natural join settore_store.attivita;
+ERROR 1049 (42000): Unknown database 'settore_store'
+mysql> select store.id_store,personale.nome,store.indirizzo
+    -> from store
+    -> inner join personale on store.id_store=personale.id_store;
++----------+---------+-------------------------------+
+| id_store | nome    | indirizzo                     |
++----------+---------+-------------------------------+
+| 10       | marco   | viale marconi 83 Roma         |
+| 11       | tom     | vialem appia 96 Roma          |
+| 12       | richard | Via Della Primavera 194  Roma |
+| 13       | lexy    |  Via Schiavonetti 05 Roma     |
+| 14       | anna    | Via Dei Sampieri 92  Roma     |
+| 15       | shane   | Via Riano Snc  Roma           |
+| 16       | reina   | Via Niccodemi 105  Roma       |
+| 17       | max     | Via Andrea Barbato  Roma      |
++----------+---------+-------------------------------+
+8 rows in set (0.00 sec)
+
+mysql> select attivita_store.id_mansione,settore_store.attivita,attivita_store.descrizione_attivita
+    -> from attivita_store
+    -> innerjoin settore_store on attivita_store.id_mansione=settore_store.id_settore;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'settore_store on attivita_store.id_mansione=settore_store.id_settore' at line 3
+mysql> alter table attivita_store rename column descrizione_attivita to attivita;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select attivita_store.id_mansione,settore_store.attivita,attivita_store.descrizione_attivita
+    ->     -> from attivita_store
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from attivita_store' at line 2
+mysql>  select attivita_store.id_mansione,settore_store.id_settore,attivita_store.id_mansione
+    -> from attivita_store
+    -> innerjoin seetore_store on attivita_store.attivita=settore_store.attivita;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'seetore_store on attivita_store.attivita=settore_store.attivita' at line 3
+mysql> select attivita_store.id_mansione,settore_store.attivita,attivita_store.attivita
+    -> from attivita_store
+    ->     -> innerjoin settore_store on attivita_store.id_mansione=settore_store.id_settore;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> innerjoin settore_store on attivita_store.id_mansione=settore_store.id_settor' at line 3
+mysql> select attivita_store.id_mansione,settore_store.attivita,attivita_store.attivita
+    ->     -> from attivita_store innerjoin settore_store on attivita_store.attivita=settore_store attivita;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from attivita_store innerjoin settore_store on attivita_store.attivita=settore_s' at line 2
+mysql> select attivita_store.id_mansione,attivita
+    -> from attivita_store
+    -> inner join settore_store
+    -> on attivita_store.id_mansione=settore_store.id_settore;
+ERROR 1052 (23000): Column 'attivita' in field list is ambiguous
+mysql> alter table attivita_store rename column descrizione_attivita to codice_attivita;
+ERROR 1054 (42S22): Unknown column 'descrizione_attivita' in 'attivita_store'
+mysql> alter table attivita_store rename column attivita to codice_attivita;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select attivita_store.id_mansione,codice_attivita
+    -> from attivita_store
+    -> inner join settore_store
+    -> on attivita_store.id_mansione=settore_store.id_settore;
+Empty set (0.00 sec)
+
+mysql> show column from settore_store;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'column from settore_store' at line 1
+mysql> show columns from settore_store;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| id_settore | varchar(16) | NO   | PRI | NULL    |       |
+| attivita   | varchar(16) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> show values from attivita;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'values from attivita' at line 1
+mysql> select column attivita from settore_store;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'column attivita from settore_store' at line 1
+mysql> select attivita from settore_store;
++-------------+
+| attivita    |
++-------------+
+| cassiere    |
+| magaziniere |
+| vendita     |
+| cassiere    |
+| magaziniere |
+| vendita     |
+| cassiere    |
++-------------+
+7 rows in set (0.00 sec)
+
+mysql>
